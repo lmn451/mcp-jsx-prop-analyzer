@@ -1,6 +1,3 @@
-// NOTE: This is a placeholder implementation.
-// The actual analyzer logic using @babel/parser and @babel/traverse would go here.
-
 /**
  * Finds usages of a specified JSX component and its props.
  * This is a mock implementation.
@@ -12,10 +9,6 @@
  * @returns {Array} - An array of matching results.
  */
 export const findPropUsage = (rootDir, componentName, propName, propValue, options) => {
-  // In a real implementation, you would use Node's `fs` module to walk the file system,
-  // read files, parse them with @babel/parser, and traverse the AST with @babel/traverse.
-  // For now, we'll just return some mock data to demonstrate the CLI.
-
   if (options.findMissing) {
     return [
       {
