@@ -1,7 +1,8 @@
 import fs from "fs";
 import path from "path";
 import { parse } from "@babel/parser";
-import traverse from "@babel/traverse";
+import traverseModule from "@babel/traverse";
+const traverse = traverseModule.default || traverseModule;
 
 /**
  * Recursively finds all JavaScript/JSX files in a directory

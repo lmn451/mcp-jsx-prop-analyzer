@@ -60,11 +60,25 @@ server.tool(
       );
 
       if (results.length === 0) {
+        const formattedResults = {
+          summary: {
+            totalMatches: 0,
+            searchCriteria: {
+              component: componentName,
+              prop: propName,
+              value: propValue || null,
+              mode: findMissing ? "missing props" : "existing props",
+            },
+          },
+          matches: [],
+          message: `No matching ${componentName} components found with the specified criteria.`,
+        };
+
         return {
           content: [
             {
               type: "text",
-              text: `No matching ${componentName} components found with the specified criteria.`,
+              text: JSON.stringify(formattedResults, null, 2),
             },
           ],
         };
@@ -131,11 +145,21 @@ server.tool(
       );
 
       if (results.length === 0) {
+        const formattedResults = {
+          summary: {
+            componentsWithMissingProp: 0,
+            component: componentName,
+            missingProp: propName,
+          },
+          violations: [],
+          message: `All ${componentName} components have the '${propName}' prop. No missing props found.`,
+        };
+
         return {
           content: [
             {
               type: "text",
-              text: `All ${componentName} components have the '${propName}' prop. No missing props found.`,
+              text: JSON.stringify(formattedResults, null, 2),
             },
           ],
         };
@@ -198,11 +222,24 @@ server.tool(
       );
 
       if (results.length === 0) {
+        const formattedResults = {
+          summary: {
+            totalMatches: 0,
+            searchCriteria: {
+              component: componentName,
+              prop: propName,
+              contains: searchValue,
+            },
+          },
+          matches: [],
+          message: `No ${componentName} components found with '${propName}' prop containing '${searchValue}'.`,
+        };
+
         return {
           content: [
             {
               type: "text",
-              text: `No ${componentName} components found with '${propName}' prop containing '${searchValue}'.`,
+              text: JSON.stringify(formattedResults, null, 2),
             },
           ],
         };
@@ -244,11 +281,17 @@ server.tool(
 
 // Start the server
 async function main() {
-  const transport = new StdioServerTransport();
-  await server.connect(transport);
-  console.error("JSX Analyzer MCP server running on stdio");
+  try {
+    const transport = new StdioServerTransport();
+    await server.connect(transport);
+    console.error("JSX Analyzer MCP server running on stdio");
+  } catch (error) {
+    console.error("Failed to initialize server:", error);
+    process.exit(1);
+  }
 }
 
+// Start the server when the module is executed
 main().catch((error) => {
   console.error("Failed to start MCP server:", error);
   process.exit(1);
