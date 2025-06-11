@@ -1,0 +1,27 @@
+{
+  "name": "my-component-prop-analyzer",
+  "version": "1.0.0",
+  "description": "A CLI tool to analyze JSX prop usage in a codebase.",
+  "main": "analyzer.js",
+  "type": "module",
+  "bin": {
+    "mcp": "./cli.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "react",
+    "jsx",
+    "ast",
+    "analyzer",
+    "cli"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@babel/parser": "^7.23.0",
+    "@babel/traverse": "^7.23.0",
+    "yargs": "^17.7.2"
+  }
+}
