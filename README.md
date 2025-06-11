@@ -53,6 +53,90 @@ Use the traditional command-line interface:
 
 The project now also works as an MCP server, exposing three tools:
 
+#### Installation for VS Code / Cursor
+
+You have two options for installing this MCP server:
+
+##### Option 1: Local Installation
+
+**For VS Code with Roo/Cline:**
+
+1. Open the MCP settings file: `~/Library/Application Support/Code/User/globalStorage/rooveterinaryinc.roo-cline/settings/mcp_settings.json`
+2. Add the jsx-analyzer server to the `mcpServers` object:
+
+```json
+{
+  "mcpServers": {
+    "jsx-analyzer": {
+      "command": "node",
+      "args": ["/absolute/path/to/your/project/mcp-server.js"],
+      "disabled": false,
+      "alwaysAllow": []
+    }
+  }
+}
+```
+
+**For Cursor with Claude/Cline:**
+
+1. Open the MCP settings file: `~/Library/Application Support/Cursor/User/globalStorage/rooveterinaryinc.roo-cline/settings/mcp_settings.json`
+2. Add the same configuration as above
+
+**Local Installation Notes:**
+
+- Replace `/absolute/path/to/your/project/mcp-server.js` with the actual absolute path to your mcp-server.js file
+- Make sure you've run `npm install` in the project directory first
+- Restart VS Code/Cursor after modifying the settings file
+
+##### Option 2: NPX Installation (if published to npm)
+
+If this package is published to npm, you can use npx for easier installation:
+
+**For VS Code with Roo/Cline:**
+
+```json
+{
+  "mcpServers": {
+    "jsx-analyzer": {
+      "command": "npx",
+      "args": ["-y", "my-component-prop-analyzer", "mcp-server.js"],
+      "disabled": false,
+      "alwaysAllow": []
+    }
+  }
+}
+```
+
+**For Cursor with Claude/Cline:**
+Use the same configuration as above.
+
+**NPX Installation Benefits:**
+
+- No need to clone the repository locally
+- Always uses the latest published version
+- Simpler configuration (no absolute paths required)
+- Automatic dependency management
+
+**Publishing to NPM (for package maintainers):**
+To enable npx installation, publish the package:
+
+```bash
+# Update package name in package.json if needed
+npm login
+npm publish
+```
+
+Then users can reference it via npx using the published package name.
+
+**General Notes:**
+
+- Restart VS Code/Cursor after modifying the settings file
+- The server will automatically start when you begin a new conversation
+
+#### Verification
+
+After installation, you should see "jsx-analyzer" listed in the Connected MCP Servers section when you start a new conversation.
+
 #### Tools Available:
 
 1. **`analyze_jsx_props`** - General JSX prop analysis
