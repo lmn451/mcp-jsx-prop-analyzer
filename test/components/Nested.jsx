@@ -27,3 +27,13 @@ export const ParentComponent = () => {
     </div>
   );
 };
+
+export default function Nested() {
+  return (
+    <div>
+      <OtherComponent>
+        <NestedComponent testProp="child" />
+      </OtherComponent>
+    </div>
+  );
+}

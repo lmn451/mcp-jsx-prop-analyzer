@@ -203,7 +203,12 @@ server.tool(
     rootDir: z.string().describe("Root directory or file path to analyze"),
     componentName: z.string().describe("Name of the JSX component to analyze"),
     propName: z.string().describe("Name of the prop to search for"),
-    searchValue: z.string().describe("String to search for within prop values"),
+    searchValue: z
+      .string()
+      .optional()
+      .describe(
+        "String to search for within prop values (optional - if not provided, lists all occurrences of the prop)"
+      ),
     verbose: z
       .boolean()
       .optional()
@@ -212,27 +217,40 @@ server.tool(
   },
   async ({ rootDir, componentName, propName, searchValue, verbose }) => {
     try {
-      const options = { findMissing: false, verbose, includes: true };
+      const options = {
+        findMissing: false,
+        verbose,
+        includes: searchValue ? true : false,
+      };
       const results = findPropUsage(
         rootDir,
         componentName,
         propName,
-        searchValue,
+        searchValue || null,
         options
       );
 
       if (results.length === 0) {
+        const searchCriteria = {
+          component: componentName,
+          prop: propName,
+        };
+
+        if (searchValue) {
+          searchCriteria.contains = searchValue;
+        }
+
+        const message = searchValue
+          ? `No ${componentName} components found with '${propName}' prop containing '${searchValue}'.`
+          : `No ${componentName} components found with '${propName}' prop.`;
+
         const formattedResults = {
           summary: {
             totalMatches: 0,
-            searchCriteria: {
-              component: componentName,
-              prop: propName,
-              contains: searchValue,
-            },
+            searchCriteria,
           },
           matches: [],
-          message: `No ${componentName} components found with '${propName}' prop containing '${searchValue}'.`,
+          message,
         };
 
         return {
@@ -245,14 +263,19 @@ server.tool(
         };
       }
 
+      const searchCriteria = {
+        component: componentName,
+        prop: propName,
+      };
+
+      if (searchValue) {
+        searchCriteria.contains = searchValue;
+      }
+
       const formattedResults = {
         summary: {
           totalMatches: results.length,
-          searchCriteria: {
-            component: componentName,
-            prop: propName,
-            contains: searchValue,
-          },
+          searchCriteria,
         },
         matches: results,
       };
