@@ -95,16 +95,11 @@ If this package is published to npm, you can use npx for easier installation:
 **For VS Code with Roo/Cline:**
 
 ```json
-{
-  "mcpServers": {
-    "jsx-analyzer": {
+ "jsx-analyzer": {
       "command": "npx",
-      "args": ["-y", "my-component-prop-analyzer", "mcp-server.js"],
-      "disabled": false,
-      "alwaysAllow": []
+      "args": ["-y", "my-component-prop-analyzer"],
+      "disabled": false
     }
-  }
-}
 ```
 
 **For Cursor with Claude/Cline:**

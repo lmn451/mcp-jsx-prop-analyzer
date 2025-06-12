@@ -122,6 +122,12 @@ const analyzeFile = (filePath, componentName, propName, propValue, options) => {
               if (attr.value) {
                 if (attr.value.type === "Literal") {
                   attrValue = attr.value.value;
+                } else if (attr.value.type === "JSXStringLiteral") {
+                  // JSX string attributes like testProp="value"
+                  attrValue = attr.value.value;
+                } else if (attr.value.type === "StringLiteral") {
+                  // Another possible type for string literals
+                  attrValue = attr.value.value;
                 } else if (attr.value.type === "JSXExpressionContainer") {
                   // For expressions, get the raw code
                   attrValue = code.substring(attr.value.start, attr.value.end);
