@@ -216,16 +216,358 @@ class MCPTester {
     }
   }
 
+  async testAnalyzeFormComponents() {
+    console.log("\n📝 Testing form component analysis...");
+
+    try {
+      const response = await this.sendRequest("tools/call", {
+        name: "analyze_jsx_props",
+        arguments: {
+          rootDir: "./test",
+          componentName: "Input",
+          propName: "type",
+          verbose: true,
+        },
+      });
+
+      if (response.result) {
+        console.log("✅ Form component analysis successful");
+        const content = response.result.content[0].text;
+        const result = JSON.parse(content);
+        console.log(
+          `   Found ${result.summary.totalMatches} Input components with 'type' prop`
+        );
+        return response;
+      } else {
+        throw new Error("Invalid form component analysis response");
+      }
+    } catch (error) {
+      console.error("❌ Form component analysis failed:", error.message);
+      throw error;
+    }
+  }
+
+  async testNestedComponentAnalysis() {
+    console.log("\n🔍 Testing nested component analysis...");
+
+    try {
+      const response = await this.sendRequest("tools/call", {
+        name: "analyze_jsx_props",
+        arguments: {
+          rootDir: "./test",
+          componentName: "NestedComponent",
+          propName: "testProp",
+          verbose: true,
+        },
+      });
+
+      if (response.result) {
+        console.log("✅ Nested component analysis successful");
+        const content = response.result.content[0].text;
+        const result = JSON.parse(content);
+        console.log(
+          `   Found ${result.summary.totalMatches} NestedComponent instances with 'testProp'`
+        );
+        return response;
+      } else {
+        throw new Error("Invalid nested component analysis response");
+      }
+    } catch (error) {
+      console.error("❌ Nested component analysis failed:", error.message);
+      throw error;
+    }
+  }
+
+  async testClassNameSearch() {
+    console.log("\n🎨 Testing className prop search...");
+
+    try {
+      const response = await this.sendRequest("tools/call", {
+        name: "search_prop_values",
+        arguments: {
+          rootDir: "./test",
+          componentName: "NestedComponent",
+          propName: "className",
+          searchValue: "example",
+          verbose: true,
+        },
+      });
+
+      if (response.result) {
+        console.log("✅ className search successful");
+        const content = response.result.content[0].text;
+        const result = JSON.parse(content);
+        console.log(
+          `   Found ${result.summary.totalMatches} components with 'example' className`
+        );
+        return response;
+      } else {
+        throw new Error("Invalid className search response");
+      }
+    } catch (error) {
+      console.error("❌ className search failed:", error.message);
+      throw error;
+    }
+  }
+
+  async testMissingRequiredProps() {
+    console.log("\n⚠️  Testing missing required props...");
+
+    try {
+      const response = await this.sendRequest("tools/call", {
+        name: "find_missing_props",
+        arguments: {
+          rootDir: "./test",
+          componentName: "Button",
+          propName: "children",
+          verbose: true,
+        },
+      });
+
+      if (response.result) {
+        console.log("✅ Missing required props test successful");
+        const content = response.result.content[0].text;
+        const result = JSON.parse(content);
+        console.log(
+          `   Found ${
+            result.summary.componentsWithMissingProp || 0
+          } Button components missing 'children' prop`
+        );
+        return response;
+      } else {
+        throw new Error("Invalid missing required props response");
+      }
+    } catch (error) {
+      console.error("❌ Missing required props test failed:", error.message);
+      throw error;
+    }
+  }
+
+  async testIconButtonAnalysis() {
+    console.log("\n🔘 Testing IconButton component analysis...");
+
+    try {
+      const response = await this.sendRequest("tools/call", {
+        name: "analyze_jsx_props",
+        arguments: {
+          rootDir: "./test",
+          componentName: "IconButton",
+          propName: "icon",
+          verbose: true,
+        },
+      });
+
+      if (response.result) {
+        console.log("✅ IconButton analysis successful");
+        const content = response.result.content[0].text;
+        const result = JSON.parse(content);
+        console.log(
+          `   Found ${result.summary.totalMatches} IconButton components with 'icon' prop`
+        );
+        return response;
+      } else {
+        throw new Error("Invalid IconButton analysis response");
+      }
+    } catch (error) {
+      console.error("❌ IconButton analysis failed:", error.message);
+      throw error;
+    }
+  }
+
+  async testSelectOptionsAnalysis() {
+    console.log("\n📋 Testing Select component options analysis...");
+
+    try {
+      const response = await this.sendRequest("tools/call", {
+        name: "analyze_jsx_props",
+        arguments: {
+          rootDir: "./test",
+          componentName: "Select",
+          propName: "options",
+          verbose: true,
+        },
+      });
+
+      if (response.result) {
+        console.log("✅ Select options analysis successful");
+        const content = response.result.content[0].text;
+        const result = JSON.parse(content);
+        console.log(
+          `   Found ${result.summary.totalMatches} Select components with 'options' prop`
+        );
+        return response;
+      } else {
+        throw new Error("Invalid Select options analysis response");
+      }
+    } catch (error) {
+      console.error("❌ Select options analysis failed:", error.message);
+      throw error;
+    }
+  }
+
+  async testNonExistentComponent() {
+    console.log("\n❓ Testing non-existent component...");
+
+    try {
+      const response = await this.sendRequest("tools/call", {
+        name: "analyze_jsx_props",
+        arguments: {
+          rootDir: "./test",
+          componentName: "NonExistentComponent",
+          propName: "someProp",
+          verbose: true,
+        },
+      });
+
+      if (response.result) {
+        console.log("✅ Non-existent component test successful");
+        const content = response.result.content[0].text;
+        const result = JSON.parse(content);
+        console.log(
+          `   As expected, found ${result.summary.totalMatches} matches for non-existent component`
+        );
+        return response;
+      } else {
+        throw new Error("Invalid non-existent component response");
+      }
+    } catch (error) {
+      console.error("❌ Non-existent component test failed:", error.message);
+      throw error;
+    }
+  }
+
+  async testBooleanPropAnalysis() {
+    console.log("\n✅ Testing boolean prop analysis...");
+
+    try {
+      const response = await this.sendRequest("tools/call", {
+        name: "analyze_jsx_props",
+        arguments: {
+          rootDir: "./test",
+          componentName: "Input",
+          propName: "required",
+          verbose: true,
+        },
+      });
+
+      if (response.result) {
+        console.log("✅ Boolean prop analysis successful");
+        const content = response.result.content[0].text;
+        const result = JSON.parse(content);
+        console.log(
+          `   Found ${result.summary.totalMatches} Input components with 'required' prop`
+        );
+        return response;
+      } else {
+        throw new Error("Invalid boolean prop analysis response");
+      }
+    } catch (error) {
+      console.error("❌ Boolean prop analysis failed:", error.message);
+      throw error;
+    }
+  }
+
+  async testMultipleVariantSearch() {
+    console.log("\n🎭 Testing multiple variant search...");
+
+    try {
+      const response = await this.sendRequest("tools/call", {
+        name: "search_prop_values",
+        arguments: {
+          rootDir: "./test",
+          componentName: "Button",
+          propName: "variant",
+          searchValue: "secondary",
+          verbose: true,
+        },
+      });
+
+      if (response.result) {
+        console.log("✅ Multiple variant search successful");
+        const content = response.result.content[0].text;
+        const result = JSON.parse(content);
+        console.log(
+          `   Found ${result.summary.totalMatches} Button components with 'secondary' variant`
+        );
+        return response;
+      } else {
+        throw new Error("Invalid multiple variant search response");
+      }
+    } catch (error) {
+      console.error("❌ Multiple variant search failed:", error.message);
+      throw error;
+    }
+  }
+
+  async testLinkButtonProps() {
+    console.log("\n🔗 Testing LinkButton props...");
+
+    try {
+      const response = await this.sendRequest("tools/call", {
+        name: "find_missing_props",
+        arguments: {
+          rootDir: "./test",
+          componentName: "LinkButton",
+          propName: "href",
+          verbose: true,
+        },
+      });
+
+      if (response.result) {
+        console.log("✅ LinkButton props test successful");
+        const content = response.result.content[0].text;
+        const result = JSON.parse(content);
+        console.log(
+          `   Found ${
+            result.summary.componentsWithMissingProp || 0
+          } LinkButton components missing 'href' prop`
+        );
+        return response;
+      } else {
+        throw new Error("Invalid LinkButton props response");
+      }
+    } catch (error) {
+      console.error("❌ LinkButton props test failed:", error.message);
+      throw error;
+    }
+  }
+
   async runAllTests() {
     try {
       await this.startServer();
+
+      // Basic functionality tests
       await this.testInitialize();
       await this.testListTools();
+
+      // Core tool tests
       await this.testAnalyzeJsxProps();
       await this.testFindMissingProps();
       await this.testSearchPropValues();
 
+      // Extended component tests
+      await this.testAnalyzeFormComponents();
+      await this.testNestedComponentAnalysis();
+      await this.testIconButtonAnalysis();
+      await this.testSelectOptionsAnalysis();
+      await this.testLinkButtonProps();
+
+      // Property-specific tests
+      await this.testClassNameSearch();
+      await this.testMissingRequiredProps();
+      await this.testBooleanPropAnalysis();
+      await this.testMultipleVariantSearch();
+
+      // Edge case tests
+      await this.testNonExistentComponent();
+
       console.log("\n🎉 All tests passed successfully!");
+      console.log(`\n📊 Test Summary:`);
+      console.log(`   - Basic functionality: ✅`);
+      console.log(`   - Core tools: ✅`);
+      console.log(`   - Component analysis: ✅`);
+      console.log(`   - Property analysis: ✅`);
+      console.log(`   - Edge cases: ✅`);
     } catch (error) {
       console.error("\n💥 Test suite failed:", error.message);
       process.exit(1);

@@ -1,6 +1,6 @@
 {
   "name": "my-component-prop-analyzer",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "A CLI tool to analyze JSX prop usage in a codebase.",
   "main": "analyzer.js",
   "type": "module",
@@ -9,7 +9,11 @@
     "my-component-prop-analyzer": "./mcp-server.js"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "node test-runner.js",
+    "test:basic": "node test-mcp.js",
+    "test:performance": "node test-performance.js",
+    "test:edge-cases": "node test-edge-cases.js",
+    "test:all": "node test-runner.js",
     "mcp": "node mcp-server.js"
   },
   "keywords": [
