@@ -1,8 +1,22 @@
-import React from "react";
+import React, { useState } from "react";
 import { Button, IconButton, LinkButton } from "./components/Button.jsx";
 import { Input, TextArea, Select, Checkbox } from "./components/Form.jsx";
 
+/**
+ * Form data interface for contact form
+ * @typedef {Object} FormData
+ * @property {string} name - User's full name
+ * @property {string} email - User's email address
+ * @property {string} message - Message content
+ * @property {boolean} newsletter - Newsletter subscription status
+ */
+
+/**
+ * Contact form component
+ * @returns {React.ReactElement} Rendered contact form
+ */
 export const App = () => {
+  /** @type {FormData} */
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -10,6 +24,7 @@ export const App = () => {
     newsletter: false,
   });
 
+  /** @type {{value: string, label: string}[]} */
   const options = [
     { value: "general", label: "General Inquiry" },
     { value: "support", label: "Support" },

@@ -5,11 +5,71 @@ import traverseModule from "@babel/traverse";
 const traverse = traverseModule.default || traverseModule;
 
 /**
+ * Finds .gitignore file in current directory or any ancestor directories
+ * @returns {string|null} Absolute path to .gitignore file or null if not found
+ */
+const findGitignoreInAncestors = () => {
+  let currentDir = process.cwd();
+  const rootDir = path.parse(currentDir).root;
+
+  while (true) {
+    const potentialPath = path.join(currentDir, ".gitignore");
+    try {
+      // Check if file exists
+      fs.accessSync(potentialPath, fs.constants.F_OK);
+      return potentialPath;
+    } catch (error) {
+      // If we've reached the root directory, stop searching
+      if (currentDir === rootDir) {
+        break;
+      }
+      // Move up one directory level
+      currentDir = path.dirname(currentDir);
+    }
+  }
+  return null;
+};
+
+/**
+ * Parses .gitignore file and extracts directory patterns
+ * @returns {Set<string>} Set of directory names to exclude from analysis
+ */
+const parseGitignore = () => {
+  const gitignorePath = findGitignoreInAncestors();
+
+  if (!gitignorePath) {
+    return new Set();
+  }
+
+  try {
+    const content = fs.readFileSync(gitignorePath, "utf8");
+    return new Set(
+      content
+        .split("\n")
+        .map((line) => line.trim())
+        .filter((line) => line && !line.startsWith("#"))
+        .map((line) => line.replace(/\/$/, "").replace(/[\\*].*$/, ""))
+        .filter((dir) => dir)
+    );
+  } catch (error) {
+    console.warn(
+      `Warning: Could not read .gitignore at ${gitignorePath}: ${error.message}`
+    );
+    return new Set();
+  }
+};
+
+/**
  * Recursively finds all JavaScript/JSX files in a directory
  * @param {string} dir - Directory to search
- * @returns {Array<string>} - Array of file paths
+ * @returns {string[]} - Array of absolute file paths matching supported extensions
  */
 const findJSXFiles = (dir) => {
+  // Combine default exclusions with .gitignore patterns
+  const gitignoreDirs = parseGitignore();
+  const defaultExclusions = new Set(["node_modules", ".git"]);
+  const excludedDirs = new Set([...defaultExclusions, ...gitignoreDirs]);
+
   const files = [];
 
   try {
@@ -20,11 +80,7 @@ const findJSXFiles = (dir) => {
 
       if (entry.isDirectory()) {
         // Skip node_modules and other common directories
-        if (
-          !["node_modules", ".git", "dist", "build", ".next"].includes(
-            entry.name
-          )
-        ) {
+        if (!excludedDirs.has(entry.name)) {
           files.push(...findJSXFiles(fullPath));
         }
       } else if (entry.isFile()) {
@@ -44,12 +100,17 @@ const findJSXFiles = (dir) => {
 
 /**
  * Parses a file and extracts JSX component usage
+ * @typedef {Object} AnalyzeOptions
+ * @property {boolean} [findMissing] - If true, finds components missing the specified prop
+ * @property {boolean} [verbose] - If true, returns all props of matching components
+ * @property {boolean} [includes] - If true, checks if prop value includes the specified string
+ *
  * @param {string} filePath - Path to the file
  * @param {string} componentName - Name of the component to find
  * @param {string} propName - Name of the prop to check
- * @param {string|null} propValue - Value of the prop to match
- * @param {object} options - Additional options
- * @returns {Array} - Array of results for this file
+ * @param {string|null} propValue - Value of the prop to match (null for presence check)
+ * @param {AnalyzeOptions} options - Additional analysis options
+ * @returns {Array<{filePath: string, lineNumber: number, props: Object, message?: string}>} - Array of results with detailed info
  */
 const analyzeFile = (filePath, componentName, propName, propValue, options) => {
   const results = [];
@@ -199,12 +260,17 @@ const analyzeFile = (filePath, componentName, propName, propValue, options) => {
 
 /**
  * Finds usages of a specified JSX component and its props.
- * @param {string} rootDir - The directory to search.
- * @param {string} componentName - The name of the component to find.
- * @param {string} propName - The name of the prop to check.
- * @param {string|null} propValue - The value of the prop to match.
- * @param {object} options - Additional options like findMissing, verbose, includes.
- * @returns {Array} - An array of matching results.
+ * @typedef {Object} FindPropOptions
+ * @property {boolean} [findMissing] - If true, finds components missing the specified prop
+ * @property {boolean} [verbose] - If true, returns all props of matching components
+ * @property {boolean} [includes] - If true, checks if prop value includes the specified string
+ *
+ * @param {string} rootDir - The directory to search
+ * @param {string} componentName - The name of the component to find
+ * @param {string} propName - The name of the prop to check
+ * @param {string|null} propValue - The value of the prop to match (null for presence check)
+ * @param {FindPropOptions} options - Additional analysis options
+ * @returns {Array<{filePath: string, lineNumber: number, props: Object, message?: string}>} - Array of matching results with detailed info
  */
 export const findPropUsage = (
   rootDir,
@@ -250,7 +316,7 @@ export const findPropUsage = (
 
 /**
  * Displays the analysis results in the console.
- * @param {Array} results - The array of results from findPropUsage.
+ * @param {Array<{filePath: string, lineNumber: number, props: Object, message?: string}>} results - Analysis results to display
  */
 export const displayResults = (results) => {
   if (!results || results.length === 0) {

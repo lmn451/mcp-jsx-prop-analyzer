@@ -1,6 +1,22 @@
 import React from "react";
 
-// Component with complex prop patterns
+/**
+ * Modal component props
+ * @typedef {Object} ModalProps
+ * @property {boolean} isOpen - Controls modal visibility
+ * @property {Function} onClose - Callback to close modal
+ * @property {string} title - Modal title text
+ * @property {React.ReactNode} children - Modal content
+ * @property {"small" | "medium" | "large"} [size="medium"] - Modal size
+ * @property {boolean} [backdrop=true] - Show backdrop overlay
+ * @property {boolean} [keyboard=true] - Allow keyboard dismiss
+ */
+
+/**
+ * Modal dialog component with configurable options
+ * @param {ModalProps} props - Component props
+ * @returns {React.ReactElement} Rendered modal
+ */
 export const Modal = ({
   isOpen,
   onClose,
@@ -28,7 +44,19 @@ export const Modal = ({
   );
 };
 
-// Component with spread props
+/**
+ * Flex container props
+ * @typedef {Object} FlexBoxProps
+ * @property {"row" | "column"} [direction="row"] - Flex direction
+ * @property {boolean} [wrap=false] - Allow flex wrapping
+ * @property {React.ReactNode} children - Content to layout
+ */
+
+/**
+ * Flex container component with responsive options
+ * @param {FlexBoxProps & React.HTMLProps<HTMLDivElement>} props - Component props including all div attributes
+ * @returns {React.ReactElement} Rendered flex container
+ */
 export const FlexBox = ({ direction = "row", wrap = false, ...props }) => {
   return (
     <div
@@ -40,7 +68,20 @@ export const FlexBox = ({ direction = "row", wrap = false, ...props }) => {
   );
 };
 
-// Component with conditional rendering
+/**
+ * Alert component props
+ * @typedef {Object} AlertProps
+ * @property {"info" | "success" | "warning" | "error"} [type="info] - Alert severity
+ * @property {boolean} [dismissible] - Show dismiss button
+ * @property {Function} [onDismiss] - Callback for dismiss button
+ * @property {React.ReactNode} children - Alert content
+ */
+
+/**
+ * Alert message component with dismissible option
+ * @param {AlertProps} props - Component props
+ * @returns {React.ReactElement} Rendered alert
+ */
 export const Alert = ({ type = "info", dismissible, onDismiss, children }) => {
   return (
     <div className={`alert alert-${type}`} role="alert">
@@ -59,7 +100,28 @@ export const Alert = ({ type = "info", dismissible, onDismiss, children }) => {
   );
 };
 
-// Component with function prop
+/**
+ * Table row click handler
+ * @callback RowClickHandler
+ * @param {Object} row - Clicked row data
+ * @returns {void}
+ */
+
+/**
+ * Data table props
+ * @typedef {Object} DataTableProps
+ * @property {Object[]} [data=[]] - Array of row data objects
+ * @property {Object[]} [columns=[]] - Column configuration
+ * @property {RowClickHandler} [onRowClick] - Row click handler
+ * @property {boolean} [sortable=false] - Enable column sorting
+ * @property {boolean} [paginate=false] - Enable pagination
+ */
+
+/**
+ * Data table component with configurable columns and interactions
+ * @param {DataTableProps} props - Component props
+ * @returns {React.ReactElement} Rendered data table
+ */
 export const DataTable = ({
   data = [],
   columns = [],
@@ -91,7 +153,20 @@ export const DataTable = ({
   );
 };
 
-// Component with ref forwarding
+/**
+ * Custom input component props
+ * @typedef {Object} CustomInputProps
+ * @property {string} [label] - Input label text
+ * @property {string} [error] - Error message to display
+ * @property {string} [helper] - Helper text below input
+ * @property {React.Ref<HTMLInputElement>} ref - Forwarded ref to input element
+ * @property {Object} [inputProps] - Additional input attributes
+ */
+
+/**
+ * Custom input component with error and helper text
+ * @type {React.ForwardRefExoticComponent<React.PropsWithoutRef<CustomInputProps> & React.RefAttributes<HTMLInputElement>>}
+ */
 export const CustomInput = React.forwardRef(
   ({ label, error, helper, ...inputProps }, ref) => {
     return (

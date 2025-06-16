@@ -1,4 +1,22 @@
 #!/usr/bin/env node
+/**
+ * MCP Server for JSX Analysis Tools
+ * @module mcp-server
+ * @typedef {Object} AnalysisOptions - Configuration options for analysis
+ * @property {boolean} [findMissing=false] - Find components missing the specified prop
+ * @property {boolean} [verbose=false] - Include all props of matching components
+ * @property {boolean} [includes=false] - Check if prop value includes the specified string
+ *
+ * @typedef {Object} ComponentAnalysisResult - Result of component analysis
+ * @property {string} filePath - Path to the file containing the component
+ * @property {string} componentName - Name of the component
+ * @property {Object} props - Props of the component
+ * @property {Object} [matchedProp] - Details of the matched prop
+ *
+ * @typedef {Object} ToolResponse - MCP tool response format
+ * @property {Array<{type: string, text: string}>} content - Response content
+ * @property {boolean} [isError] - Whether the response contains an error
+ */
 
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
@@ -11,7 +29,16 @@ const server = new McpServer({
   version: "1.0.0",
 });
 
-// Tool for analyzing JSX prop usage
+/**
+ * Analyze JSX prop usage with enhanced type definitions
+ * @param {Object} params - Tool parameters
+ * @param {string} params.rootDir - Root directory or file path to analyze
+ * @param {string} params.componentName - Name of the JSX component to analyze
+ * @param {string} params.propName - Name of the prop to search for
+ * @param {string|null} [params.propValue=null] - Expected value of the prop
+ * @param {AnalysisOptions} params.options - Analysis configuration options
+ * @returns {Promise<ToolResponse>} Tool response with analysis results
+ */
 server.tool(
   "analyze_jsx_props",
   {
@@ -50,7 +77,16 @@ server.tool(
     includes,
   }) => {
     try {
+      /**
+       * Analysis options configuration
+       * @type {AnalysisOptions}
+       */
       const options = { findMissing, verbose, includes };
+
+      /**
+       * Find prop usage with enhanced type inference
+       * @type {Array<ComponentAnalysisResult>}
+       */
       const results = findPropUsage(
         rootDir,
         componentName,
@@ -120,7 +156,15 @@ server.tool(
   }
 );
 
-// Tool for finding missing props specifically
+/**
+ * Find missing props with enhanced type definitions
+ * @param {Object} params - Tool parameters
+ * @param {string} params.rootDir - Root directory or file path to analyze
+ * @param {string} params.componentName - Name of the JSX component to analyze
+ * @param {string} params.propName - Name of the prop that should be present
+ * @param {AnalysisOptions} params.options - Analysis configuration options
+ * @returns {Promise<ToolResponse>} Tool response with missing prop analysis results
+ */
 server.tool(
   "find_missing_props",
   {
@@ -135,7 +179,16 @@ server.tool(
   },
   async ({ rootDir, componentName, propName, verbose }) => {
     try {
+      /**
+       * Analysis options configuration for missing props
+       * @type {AnalysisOptions}
+       */
       const options = { findMissing: true, verbose, includes: false };
+
+      /**
+       * Find prop usage with enhanced type inference
+       * @type {Array<ComponentAnalysisResult>}
+       */
       const results = findPropUsage(
         rootDir,
         componentName,
@@ -196,7 +249,16 @@ server.tool(
   }
 );
 
-// Tool for searching prop values with substring matching
+/**
+ * Search prop values with substring matching and enhanced type definitions
+ * @param {Object} params - Tool parameters
+ * @param {string} params.rootDir - Root directory or file path to analyze
+ * @param {string} params.componentName - Name of the JSX component to analyze
+ * @param {string} params.propName - Name of the prop to search for
+ * @param {string|null} [params.searchValue=null] - String to search for within prop values
+ * @param {AnalysisOptions} params.options - Analysis configuration options
+ * @returns {Promise<ToolResponse>} Tool response with search results
+ */
 server.tool(
   "search_prop_values",
   {
@@ -217,11 +279,20 @@ server.tool(
   },
   async ({ rootDir, componentName, propName, searchValue, verbose }) => {
     try {
+      /**
+       * Analysis options configuration for prop value search
+       * @type {AnalysisOptions}
+       */
       const options = {
         findMissing: false,
         verbose,
         includes: searchValue ? true : false,
       };
+
+      /**
+       * Find prop usage with enhanced type inference
+       * @type {Array<ComponentAnalysisResult>}
+       */
       const results = findPropUsage(
         rootDir,
         componentName,
@@ -302,10 +373,18 @@ server.tool(
   }
 );
 
-// Start the server
+/**
+ * Start the MCP server with enhanced type definitions
+ * @returns {Promise<void>} Server initialization result
+ */
 async function main() {
   try {
+    /**
+     * Server transport configuration
+     * @type {StdioServerTransport}
+     */
     const transport = new StdioServerTransport();
+
     await server.connect(transport);
     console.error("JSX Analyzer MCP server running on stdio");
   } catch (error) {
