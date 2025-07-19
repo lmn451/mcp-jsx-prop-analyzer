@@ -41,7 +41,7 @@ const server = new McpServer({
  */
 server.tool(
   "analyze_jsx_props",
-  {
+  z.object({
     rootDir: z.string().describe("Root directory or file path to analyze"),
     componentName: z.string().describe("Name of the JSX component to analyze"),
     propName: z.string().describe("Name of the prop to search for"),
@@ -66,7 +66,7 @@ server.tool(
       .describe(
         "Check if the prop value includes the specified string (substring match)"
       ),
-  },
+  }),
   async ({
     rootDir,
     componentName,
