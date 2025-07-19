@@ -261,7 +261,7 @@ server.tool(
  */
 server.tool(
   "search_prop_values",
-  {
+  z.object({
     rootDir: z.string().describe("Root directory or file path to analyze"),
     componentName: z.string().describe("Name of the JSX component to analyze"),
     propName: z.string().describe("Name of the prop to search for"),
@@ -276,7 +276,7 @@ server.tool(
       .optional()
       .default(false)
       .describe("Include all props of matching components in the output"),
-  },
+  }),
   async ({ rootDir, componentName, propName, searchValue, verbose }) => {
     try {
       /**
