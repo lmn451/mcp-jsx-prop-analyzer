@@ -9,7 +9,6 @@ class MCPTester {
     this.messageId = 1;
     this.pendingRequests = new Map();
   }
-
   async startServer() {
     console.log("🚀 Starting MCP server...");
 
@@ -107,7 +106,7 @@ class MCPTester {
         console.log("✅ Tools listed successfully:");
         response.result.tools.forEach((tool) => {
           console.log(
-            `   - ${tool.name}: ${tool.description || "No description"}`
+            `   - ${tool.name}: ${tool.description || "No description"}`,
           );
         });
         return response;
@@ -169,7 +168,7 @@ class MCPTester {
         const result = JSON.parse(content);
         if (result.summary.componentsWithMissingProp !== undefined) {
           console.log(
-            `   Found ${result.summary.componentsWithMissingProp} components missing 'id' prop`
+            `   Found ${result.summary.componentsWithMissingProp} components missing 'id' prop`,
           );
         } else {
           console.log("   All components have the required prop");
@@ -204,7 +203,7 @@ class MCPTester {
         const content = response.result.content[0].text;
         const result = JSON.parse(content);
         console.log(
-          `   Found ${result.summary.totalMatches} matches with 'primary' variant`
+          `   Found ${result.summary.totalMatches} matches with 'primary' variant`,
         );
         return response;
       } else {
@@ -235,7 +234,7 @@ class MCPTester {
         const content = response.result.content[0].text;
         const result = JSON.parse(content);
         console.log(
-          `   Found ${result.summary.totalMatches} Input components with 'type' prop`
+          `   Found ${result.summary.totalMatches} Input components with 'type' prop`,
         );
         return response;
       } else {
@@ -266,7 +265,7 @@ class MCPTester {
         const content = response.result.content[0].text;
         const result = JSON.parse(content);
         console.log(
-          `   Found ${result.summary.totalMatches} NestedComponent instances with 'testProp'`
+          `   Found ${result.summary.totalMatches} NestedComponent instances with 'testProp'`,
         );
         return response;
       } else {
@@ -298,7 +297,7 @@ class MCPTester {
         const content = response.result.content[0].text;
         const result = JSON.parse(content);
         console.log(
-          `   Found ${result.summary.totalMatches} components with 'example' className`
+          `   Found ${result.summary.totalMatches} components with 'example' className`,
         );
         return response;
       } else {
@@ -331,7 +330,7 @@ class MCPTester {
         console.log(
           `   Found ${
             result.summary.componentsWithMissingProp || 0
-          } Button components missing 'children' prop`
+          } Button components missing 'children' prop`,
         );
         return response;
       } else {
@@ -362,7 +361,7 @@ class MCPTester {
         const content = response.result.content[0].text;
         const result = JSON.parse(content);
         console.log(
-          `   Found ${result.summary.totalMatches} IconButton components with 'icon' prop`
+          `   Found ${result.summary.totalMatches} IconButton components with 'icon' prop`,
         );
         return response;
       } else {
@@ -393,7 +392,7 @@ class MCPTester {
         const content = response.result.content[0].text;
         const result = JSON.parse(content);
         console.log(
-          `   Found ${result.summary.totalMatches} Select components with 'options' prop`
+          `   Found ${result.summary.totalMatches} Select components with 'options' prop`,
         );
         return response;
       } else {
@@ -424,7 +423,7 @@ class MCPTester {
         const content = response.result.content[0].text;
         const result = JSON.parse(content);
         console.log(
-          `   As expected, found ${result.summary.totalMatches} matches for non-existent component`
+          `   As expected, found ${result.summary.totalMatches} matches for non-existent component`,
         );
         return response;
       } else {
@@ -455,7 +454,7 @@ class MCPTester {
         const content = response.result.content[0].text;
         const result = JSON.parse(content);
         console.log(
-          `   Found ${result.summary.totalMatches} Input components with 'required' prop`
+          `   Found ${result.summary.totalMatches} Input components with 'required' prop`,
         );
         return response;
       } else {
@@ -487,7 +486,7 @@ class MCPTester {
         const content = response.result.content[0].text;
         const result = JSON.parse(content);
         console.log(
-          `   Found ${result.summary.totalMatches} Button components with 'secondary' variant`
+          `   Found ${result.summary.totalMatches} Button components with 'secondary' variant`,
         );
         return response;
       } else {
@@ -520,7 +519,7 @@ class MCPTester {
         console.log(
           `   Found ${
             result.summary.componentsWithMissingProp || 0
-          } LinkButton components missing 'href' prop`
+          } LinkButton components missing 'href' prop`,
         );
         return response;
       } else {
