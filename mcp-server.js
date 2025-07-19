@@ -167,7 +167,7 @@ server.tool(
  */
 server.tool(
   "find_missing_props",
-  {
+  z.object({
     rootDir: z.string().describe("Root directory or file path to analyze"),
     componentName: z.string().describe("Name of the JSX component to analyze"),
     propName: z.string().describe("Name of the prop that should be present"),
@@ -176,7 +176,7 @@ server.tool(
       .optional()
       .default(false)
       .describe("Include all props of matching components in the output"),
-  },
+  }),
   async ({ rootDir, componentName, propName, verbose }) => {
     try {
       /**
