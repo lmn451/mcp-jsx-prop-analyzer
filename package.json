@@ -1,10 +1,10 @@
 {
   "name": "my-component-prop-analyzer",
-  "version": "1.2.6",
+  "version": "1.2.8",
   "description": "A CLI tool to analyze JSX prop usage in a codebase.",
   "main": "analyzer.js",
   "type": "module",
-  "exports":{
+  "exports": {
     ".": "./analyzer.js",
     "./cli": "./cli.js",
     "./mcp-server.js": "./mcp-server.js"
@@ -36,5 +36,8 @@
     "@modelcontextprotocol/sdk": "^1.16.0",
     "yargs": "^18.0.0",
     "zod": "^4.0.5"
+  },
+  "devDependencies": {
+    "fast-deep-equal": "^3.1.3"
   }
 }
